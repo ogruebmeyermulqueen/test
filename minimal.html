@@ -1,0 +1,52 @@
+<html>
+
+	<head>
+		<TITLE>EVS</TITLE>
+	</head>
+	<body>		
+		<header>
+		</header>
+				
+		<main>
+				<img id="targ" width="960" height="540">
+		</main>
+		
+		<footer>
+			<script>
+			var log = "";
+			var interval = 800; //consistent at 400 with 3 buffers.
+			var intervalID = window.setInterval(tick, interval);
+			var xhr = new XMLHttpRequest();
+			function tick() {
+				xhr.open('GET', "https://api.desktoppr.co/1/wallpapers/random", true);
+				xhr.send();
+				xhr.onreadystatechange = processRequest;
+				function processRequest(e) {
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						var reply = JSON.parse(xhr.response);
+						var source = reply.response.image.preview.url;
+						document.getElementById("targ").src=source;
+						log = log+source+'\n';
+					}
+				}
+			}
+			function download() {
+			  var element = document.createElement('a');
+			  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(log));
+			  element.setAttribute('download', 'EVSlog - '+(new Date(1291656749000)).toUTCString());
+
+			  element.style.display = 'none';
+			  document.body.appendChild(element);
+
+			  element.click();
+
+			  document.body.removeChild(element);
+			}
+			
+			</script>
+			<button onclick="download()" style="float: right;"><b>Log</b></button>
+		</footer>	
+			
+	</body>
+	
+</html>
